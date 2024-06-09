@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.tta.mapper.MatchsMapper">
+    
+    <resultMap type="Matchs" id="MatchsResult">
+        <result property="id"    column="id"    />
+        <result property="userId1"    column="user_id1"    />
+        <result property="userName1"    column="user_name1"    />
+        <result property="userId2"    column="user_id2"    />
+        <result property="userName2"    column="user_name2"    />
+        <result property="userId3"    column="user_id3"    />
+        <result property="userName3"    column="user_name3"    />
+        <result property="userId4"    column="user_id4"    />
+        <result property="userName4"    column="user_name4"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="matchType"    column="match_type"    />
+    </resultMap>
+
+    <sql id="selectMatchsVo">
+        select id, user_id1, user_name1, user_id2, user_name2, user_id3, user_name3, user_id4, user_name4, create_time, match_type from matchs
+    </sql>
+
+    <select id="selectMatchsList" parameterType="Matchs" resultMap="MatchsResult">
+        <include refid="selectMatchsVo"/>
+        <where>  
+            <if test="userId1 != null "> and user_id1 = #{userId1}</if>
+            <if test="userName1 != null  and userName1 != ''"> and user_name1 = #{userName1}</if>
+            <if test="userId2 != null "> and user_id2 = #{userId2}</if>
+            <if test="userName2 != null  and userName2 != ''"> and user_name2 = #{userName2}</if>
+            <if test="userId3 != null "> and user_id3 = #{userId3}</if>
+            <if test="userName3 != null  and userName3 != ''"> and user_name3 = #{userName3}</if>
+            <if test="userId4 != null "> and user_id4 = #{userId4}</if>
+            <if test="userName4 != null  and userName4 != ''"> and user_name4 = #{userName4}</if>
+            <if test="matchType != null  and matchType != ''"> and match_type = #{matchType}</if>
+        </where>
+    </select>
+    
+    <select id="selectMatchsById" parameterType="Long" resultMap="MatchsResult">
+        <include refid="selectMatchsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMatchs" parameterType="Matchs">
+        insert into matchs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId1 != null">user_id1,</if>
+            <if test="userName1 != null">user_name1,</if>
+            <if test="userId2 != null">user_id2,</if>
+            <if test="userName2 != null">user_name2,</if>
+            <if test="userId3 != null">user_id3,</if>
+            <if test="userName3 != null">user_name3,</if>
+            <if test="userId4 != null">user_id4,</if>
+            <if test="userName4 != null">user_name4,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="matchType != null">match_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId1 != null">#{userId1},</if>
+            <if test="userName1 != null">#{userName1},</if>
+            <if test="userId2 != null">#{userId2},</if>
+            <if test="userName2 != null">#{userName2},</if>
+            <if test="userId3 != null">#{userId3},</if>
+            <if test="userName3 != null">#{userName3},</if>
+            <if test="userId4 != null">#{userId4},</if>
+            <if test="userName4 != null">#{userName4},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="matchType != null">#{matchType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMatchs" parameterType="Matchs">
+        update matchs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId1 != null">user_id1 = #{userId1},</if>
+            <if test="userName1 != null">user_name1 = #{userName1},</if>
+            <if test="userId2 != null">user_id2 = #{userId2},</if>
+            <if test="userName2 != null">user_name2 = #{userName2},</if>
+            <if test="userId3 != null">user_id3 = #{userId3},</if>
+            <if test="userName3 != null">user_name3 = #{userName3},</if>
+            <if test="userId4 != null">user_id4 = #{userId4},</if>
+            <if test="userName4 != null">user_name4 = #{userName4},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="matchType != null">match_type = #{matchType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMatchsById" parameterType="Long">
+        delete from matchs where id = #{id}
+    </delete>
+
+    <delete id="deleteMatchsByIds" parameterType="String">
+        delete from matchs where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

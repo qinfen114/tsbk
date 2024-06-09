@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.tta.mapper.CardListMapper">
+    
+    <resultMap type="CardList" id="CardListResult">
+        <result property="id"    column="id"    />
+        <result property="cardName"    column="card_name"    />
+        <result property="cardContent"    column="card_content"    />
+        <result property="cardType"    column="card_type"    />
+        <result property="cardEra"    column="card_era"    />
+        <result property="number"    column="number"    />
+    </resultMap>
+
+    <sql id="selectCardListVo">
+        select id, card_name, card_content, card_type, card_era, number from card_list
+    </sql>
+
+    <select id="selectCardListList" parameterType="CardList" resultMap="CardListResult">
+        <include refid="selectCardListVo"/>
+        <where>  
+            <if test="cardName != null  and cardName != ''"> and card_name like concat('%', #{cardName}, '%')</if>
+            <if test="cardContent != null  and cardContent != ''"> and card_content = #{cardContent}</if>
+            <if test="cardType != null  and cardType != ''"> and card_type = #{cardType}</if>
+            <if test="cardEra != null  and cardEra != ''"> and card_era = #{cardEra}</if>
+            <if test="number != null "> and number = #{number}</if>
+        </where>
+    </select>
+    
+    <select id="selectCardListById" parameterType="Long" resultMap="CardListResult">
+        <include refid="selectCardListVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCardList" parameterType="CardList">
+        insert into card_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="cardName != null">card_name,</if>
+            <if test="cardContent != null">card_content,</if>
+            <if test="cardType != null">card_type,</if>
+            <if test="cardEra != null">card_era,</if>
+            <if test="number != null">number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="cardName != null">#{cardName},</if>
+            <if test="cardContent != null">#{cardContent},</if>
+            <if test="cardType != null">#{cardType},</if>
+            <if test="cardEra != null">#{cardEra},</if>
+            <if test="number != null">#{number},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCardList" parameterType="CardList">
+        update card_list
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cardName != null">card_name = #{cardName},</if>
+            <if test="cardContent != null">card_content = #{cardContent},</if>
+            <if test="cardType != null">card_type = #{cardType},</if>
+            <if test="cardEra != null">card_era = #{cardEra},</if>
+            <if test="number != null">number = #{number},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCardListById" parameterType="Long">
+        delete from card_list where id = #{id}
+    </delete>
+
+    <delete id="deleteCardListByIds" parameterType="String">
+        delete from card_list where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

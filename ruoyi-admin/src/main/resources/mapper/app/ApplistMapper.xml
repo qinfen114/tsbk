@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.app.mapper.ApplistMapper">
+    
+    <resultMap type="Applist" id="ApplistResult">
+        <result property="id"    column="id"    />
+        <result property="appName"    column="app_name"    />
+        <result property="appUrl"    column="app_url"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="appContent"    column="app_content"    />
+    </resultMap>
+
+    <sql id="selectApplistVo">
+        select id, app_name, app_url, img_url, app_content from applist
+    </sql>
+
+    <select id="selectApplistList" parameterType="Applist" resultMap="ApplistResult">
+        <include refid="selectApplistVo"/>
+        <where>  
+            <if test="appName != null  and appName != ''"> and app_name like concat('%', #{appName}, '%')</if>
+            <if test="appUrl != null  and appUrl != ''"> and app_url = #{appUrl}</if>
+            <if test="imgUrl != null  and imgUrl != ''"> and img_url = #{imgUrl}</if>
+            <if test="appContent != null  and appContent != ''"> and app_content = #{appContent}</if>
+        </where>
+    </select>
+    
+    <select id="selectApplistById" parameterType="Long" resultMap="ApplistResult">
+        <include refid="selectApplistVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertApplist" parameterType="Applist" useGeneratedKeys="true" keyProperty="id">
+        insert into applist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="appName != null and appName != ''">app_name,</if>
+            <if test="appUrl != null and appUrl != ''">app_url,</if>
+            <if test="imgUrl != null and imgUrl != ''">img_url,</if>
+            <if test="appContent != null and appContent != ''">app_content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="appName != null and appName != ''">#{appName},</if>
+            <if test="appUrl != null and appUrl != ''">#{appUrl},</if>
+            <if test="imgUrl != null and imgUrl != ''">#{imgUrl},</if>
+            <if test="appContent != null and appContent != ''">#{appContent},</if>
+         </trim>
+    </insert>
+
+    <update id="updateApplist" parameterType="Applist">
+        update applist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appName != null and appName != ''">app_name = #{appName},</if>
+            <if test="appUrl != null and appUrl != ''">app_url = #{appUrl},</if>
+            <if test="imgUrl != null and imgUrl != ''">img_url = #{imgUrl},</if>
+            <if test="appContent != null and appContent != ''">app_content = #{appContent},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteApplistById" parameterType="Long">
+        delete from applist where id = #{id}
+    </delete>
+
+    <delete id="deleteApplistByIds" parameterType="String">
+        delete from applist where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

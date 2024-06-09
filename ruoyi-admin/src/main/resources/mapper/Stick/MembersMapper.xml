@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Stick.mapper.MembersMapper">
+    
+    <resultMap type="Members" id="MembersResult">
+        <result property="uid"    column="uid"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="createtime"    column="createtime"    />
+        <result property="avatar"    column="avatar"    />
+    </resultMap>
+
+    <sql id="selectMembersVo">
+        select uid, nickname, sex, age, createtime, avatar from members
+    </sql>
+
+    <select id="selectMembersList" parameterType="Members" resultMap="MembersResult">
+        <include refid="selectMembersVo"/>
+        <where>  
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+        </where>
+    </select>
+    
+    <select id="selectMembersByUid" parameterType="Long" resultMap="MembersResult">
+        <include refid="selectMembersVo"/>
+        where uid = #{uid}
+    </select>
+        
+    <insert id="insertMembers" parameterType="Members" useGeneratedKeys="true" keyProperty="uid">
+        insert into members
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickname != null and nickname != ''">nickname,</if>
+            <if test="sex != null and sex != ''">sex,</if>
+            <if test="age != null">age,</if>
+            <if test="createtime != null">createtime,</if>
+            <if test="avatar != null">avatar,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickname != null and nickname != ''">#{nickname},</if>
+            <if test="sex != null and sex != ''">#{sex},</if>
+            <if test="age != null">#{age},</if>
+            <if test="createtime != null">#{createtime},</if>
+            <if test="avatar != null">#{avatar},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMembers" parameterType="Members">
+        update members
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickname != null and nickname != ''">nickname = #{nickname},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+        </trim>
+        where uid = #{uid}
+    </update>
+
+    <delete id="deleteMembersByUid" parameterType="Long">
+        delete from members where uid = #{uid}
+    </delete>
+
+    <delete id="deleteMembersByUids" parameterType="String">
+        delete from members where uid in 
+        <foreach item="uid" collection="array" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Stick.mapper.PostlistMapper">
+    
+    <resultMap type="Postlist" id="PostlistResult">
+        <result property="pid"    column="pid"    />
+        <result property="Imgurl"    column="Imgurl"    />
+        <result property="title"    column="title"    />
+        <result property="createtime"    column="createtime"    />
+        <result property="authorName"    column="author_name"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectPostlistVo">
+        select pid, Imgurl, title, createtime, author_name, type from postlist
+    </sql>
+
+    <select id="selectPostlistList" parameterType="Postlist" resultMap="PostlistResult">
+        <include refid="selectPostlistVo"/>
+        <where>  
+            <if test="pid != null "> and pid = #{pid}</if>
+            <if test="Imgurl != null  and Imgurl != ''"> and Imgurl = #{Imgurl}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+            <if test="authorName != null  and authorName != ''"> and author_name like concat('%', #{authorName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectPostlistByPid" parameterType="Long" resultMap="PostlistResult">
+        <include refid="selectPostlistVo"/>
+        where pid = #{pid}
+    </select>
+        
+    <insert id="insertPostlist" parameterType="Postlist">
+        insert into postlist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pid != null">pid,</if>
+            <if test="Imgurl != null">Imgurl,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="createtime != null">createtime,</if>
+            <if test="authorName != null">author_name,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pid != null">#{pid},</if>
+            <if test="Imgurl != null">#{Imgurl},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="createtime != null">#{createtime},</if>
+            <if test="authorName != null">#{authorName},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePostlist" parameterType="Postlist">
+        update postlist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="Imgurl != null">Imgurl = #{Imgurl},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+            <if test="authorName != null">author_name = #{authorName},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where pid = #{pid}
+    </update>
+
+    <delete id="deletePostlistByPid" parameterType="Long">
+        delete from postlist where pid = #{pid}
+    </delete>
+
+    <delete id="deletePostlistByPids" parameterType="String">
+        delete from postlist where pid in 
+        <foreach item="pid" collection="array" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+    </delete>
+</mapper>

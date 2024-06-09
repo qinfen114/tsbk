@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Stick.mapper.ChatlistMapper">
+    
+    <resultMap type="Chatlist" id="ChatlistResult">
+        <result property="cid"    column="cid"    />
+        <result property="pid"    column="pid"    />
+        <result property="uid"    column="uid"    />
+        <result property="content"    column="content"    />
+        <result property="createtime"    column="createtime"    />
+        <result property="files"    column="files"    />
+        <result property="imgurls"    column="imgurls"    />
+        <result property="uname"    column="uname"    />
+        <result property="avatar"    column="avatar"    />
+    </resultMap>
+
+    <sql id="selectChatlistVo">
+        select cid, pid, uid, content, createtime, files, imgurls, uname, avatar from chatlist
+    </sql>
+
+    <select id="selectChatlistList" parameterType="Chatlist" resultMap="ChatlistResult">
+        <include refid="selectChatlistVo"/>
+        <where>  
+            <if test="pid != null "> and pid = #{pid}</if>
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+            <if test="files != null  and files != ''"> and files = #{files}</if>
+            <if test="imgurls != null  and imgurls != ''"> and imgurls = #{imgurls}</if>
+            <if test="uname != null  and uname != ''"> and uname like concat('%', #{uname}, '%')</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+        </where>
+    </select>
+    
+    <select id="selectChatlistByCid" parameterType="Long" resultMap="ChatlistResult">
+        <include refid="selectChatlistVo"/>
+        where cid = #{cid}
+    </select>
+        
+    <insert id="insertChatlist" parameterType="Chatlist" useGeneratedKeys="true" keyProperty="cid">
+        insert into chatlist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pid != null">pid,</if>
+            <if test="uid != null">uid,</if>
+            <if test="content != null">content,</if>
+            <if test="createtime != null">createtime,</if>
+            <if test="files != null">files,</if>
+            <if test="imgurls != null">imgurls,</if>
+            <if test="uname != null">uname,</if>
+            <if test="avatar != null">avatar,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pid != null">#{pid},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createtime != null">#{createtime},</if>
+            <if test="files != null">#{files},</if>
+            <if test="imgurls != null">#{imgurls},</if>
+            <if test="uname != null">#{uname},</if>
+            <if test="avatar != null">#{avatar},</if>
+         </trim>
+    </insert>
+
+    <update id="updateChatlist" parameterType="Chatlist">
+        update chatlist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pid != null">pid = #{pid},</if>
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+            <if test="files != null">files = #{files},</if>
+            <if test="imgurls != null">imgurls = #{imgurls},</if>
+            <if test="uname != null">uname = #{uname},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+        </trim>
+        where cid = #{cid}
+    </update>
+
+    <delete id="deleteChatlistByCid" parameterType="Long">
+        delete from chatlist where cid = #{cid}
+    </delete>
+
+    <delete id="deleteChatlistByCids" parameterType="String">
+        delete from chatlist where cid in 
+        <foreach item="cid" collection="array" open="(" separator="," close=")">
+            #{cid}
+        </foreach>
+    </delete>
+</mapper>

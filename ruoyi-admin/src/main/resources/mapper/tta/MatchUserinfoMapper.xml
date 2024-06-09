@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.tta.mapper.MatchUserinfoMapper">
+    
+    <resultMap type="MatchUserinfo" id="MatchUserinfoResult">
+        <result property="id"    column="id"    />
+        <result property="matchId"    column="match_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="food"    column="food"    />
+        <result property="foodAdd"    column="food_add"    />
+        <result property="mine"    column="mine"    />
+        <result property="mineAdd"    column="mine_add"    />
+        <result property="science"    column="science"    />
+        <result property="scienceAdd"    column="science_add"    />
+        <result property="culture"    column="culture"    />
+        <result property="cultureAdd"    column="culture_add"    />
+        <result property="agriculture"    column="agriculture"    />
+        <result property="minerals"    column="minerals"    />
+        <result property="lab"    column="lab"    />
+        <result property="religion"    column="religion"    />
+        <result property="print"    column="print"    />
+        <result property="abattoir"    column="abattoir"    />
+        <result property="drama"    column="drama"    />
+        <result property="blueCard"    column="blue_card"    />
+        <result property="swordman"    column="swordman"    />
+        <result property="knight"    column="knight"    />
+        <result property="artillerist"    column="artillerist"    />
+        <result property="plane"    column="plane"    />
+        <result property="hardCard"    column="hard_card"    />
+        <result property="wirtePoint"    column="wirte_point"    />
+        <result property="redPoint"    column="red_point"    />
+        <result property="miracleList"    column="miracle_list"    />
+        <result property="leader"    column="leader"    />
+        <result property="formationId"    column="formation_id"    />
+        <result property="polity"    column="polity"    />
+    </resultMap>
+
+    <sql id="selectMatchUserinfoVo">
+        select id, match_id, user_id, food, food_add, mine, mine_add, science, science_add, culture, culture_add, agriculture, minerals, lab, religion, print, abattoir, drama, blue_card, swordman, knight, artillerist, plane, hard_card, wirte_point, red_point, miracle_list, leader, formation_id, polity from match_userinfo
+    </sql>
+
+    <select id="selectMatchUserinfoList" parameterType="MatchUserinfo" resultMap="MatchUserinfoResult">
+        <include refid="selectMatchUserinfoVo"/>
+        <where>  
+            <if test="matchId != null "> and match_id = #{matchId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="food != null "> and food = #{food}</if>
+            <if test="foodAdd != null "> and food_add = #{foodAdd}</if>
+            <if test="mine != null "> and mine = #{mine}</if>
+            <if test="mineAdd != null "> and mine_add = #{mineAdd}</if>
+            <if test="science != null "> and science = #{science}</if>
+            <if test="scienceAdd != null "> and science_add = #{scienceAdd}</if>
+            <if test="culture != null "> and culture = #{culture}</if>
+            <if test="cultureAdd != null "> and culture_add = #{cultureAdd}</if>
+            <if test="agriculture != null  and agriculture != ''"> and agriculture = #{agriculture}</if>
+            <if test="minerals != null  and minerals != ''"> and minerals = #{minerals}</if>
+            <if test="lab != null  and lab != ''"> and lab = #{lab}</if>
+            <if test="religion != null  and religion != ''"> and religion = #{religion}</if>
+            <if test="print != null  and print != ''"> and print = #{print}</if>
+            <if test="abattoir != null  and abattoir != ''"> and abattoir = #{abattoir}</if>
+            <if test="drama != null  and drama != ''"> and drama = #{drama}</if>
+            <if test="blueCard != null  and blueCard != ''"> and blue_card = #{blueCard}</if>
+            <if test="swordman != null  and swordman != ''"> and swordman = #{swordman}</if>
+            <if test="knight != null  and knight != ''"> and knight = #{knight}</if>
+            <if test="artillerist != null  and artillerist != ''"> and artillerist = #{artillerist}</if>
+            <if test="plane != null  and plane != ''"> and plane = #{plane}</if>
+            <if test="hardCard != null  and hardCard != ''"> and hard_card = #{hardCard}</if>
+            <if test="wirtePoint != null "> and wirte_point = #{wirtePoint}</if>
+            <if test="redPoint != null "> and red_point = #{redPoint}</if>
+            <if test="miracleList != null  and miracleList != ''"> and miracle_list = #{miracleList}</if>
+            <if test="leader != null  and leader != ''"> and leader = #{leader}</if>
+            <if test="formationId != null "> and formation_id = #{formationId}</if>
+            <if test="polity != null  and polity != ''"> and polity = #{polity}</if>
+        </where>
+    </select>
+    
+    <select id="selectMatchUserinfoById" parameterType="Long" resultMap="MatchUserinfoResult">
+        <include refid="selectMatchUserinfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMatchUserinfo" parameterType="MatchUserinfo">
+        insert into match_userinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="matchId != null">match_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="food != null">food,</if>
+            <if test="foodAdd != null">food_add,</if>
+            <if test="mine != null">mine,</if>
+            <if test="mineAdd != null">mine_add,</if>
+            <if test="science != null">science,</if>
+            <if test="scienceAdd != null">science_add,</if>
+            <if test="culture != null">culture,</if>
+            <if test="cultureAdd != null">culture_add,</if>
+            <if test="agriculture != null">agriculture,</if>
+            <if test="minerals != null">minerals,</if>
+            <if test="lab != null">lab,</if>
+            <if test="religion != null">religion,</if>
+            <if test="print != null">print,</if>
+            <if test="abattoir != null">abattoir,</if>
+            <if test="drama != null">drama,</if>
+            <if test="blueCard != null">blue_card,</if>
+            <if test="swordman != null">swordman,</if>
+            <if test="knight != null">knight,</if>
+            <if test="artillerist != null">artillerist,</if>
+            <if test="plane != null">plane,</if>
+            <if test="hardCard != null">hard_card,</if>
+            <if test="wirtePoint != null">wirte_point,</if>
+            <if test="redPoint != null">red_point,</if>
+            <if test="miracleList != null">miracle_list,</if>
+            <if test="leader != null">leader,</if>
+            <if test="formationId != null">formation_id,</if>
+            <if test="polity != null">polity,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="matchId != null">#{matchId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="food != null">#{food},</if>
+            <if test="foodAdd != null">#{foodAdd},</if>
+            <if test="mine != null">#{mine},</if>
+            <if test="mineAdd != null">#{mineAdd},</if>
+            <if test="science != null">#{science},</if>
+            <if test="scienceAdd != null">#{scienceAdd},</if>
+            <if test="culture != null">#{culture},</if>
+            <if test="cultureAdd != null">#{cultureAdd},</if>
+            <if test="agriculture != null">#{agriculture},</if>
+            <if test="minerals != null">#{minerals},</if>
+            <if test="lab != null">#{lab},</if>
+            <if test="religion != null">#{religion},</if>
+            <if test="print != null">#{print},</if>
+            <if test="abattoir != null">#{abattoir},</if>
+            <if test="drama != null">#{drama},</if>
+            <if test="blueCard != null">#{blueCard},</if>
+            <if test="swordman != null">#{swordman},</if>
+            <if test="knight != null">#{knight},</if>
+            <if test="artillerist != null">#{artillerist},</if>
+            <if test="plane != null">#{plane},</if>
+            <if test="hardCard != null">#{hardCard},</if>
+            <if test="wirtePoint != null">#{wirtePoint},</if>
+            <if test="redPoint != null">#{redPoint},</if>
+            <if test="miracleList != null">#{miracleList},</if>
+            <if test="leader != null">#{leader},</if>
+            <if test="formationId != null">#{formationId},</if>
+            <if test="polity != null">#{polity},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMatchUserinfo" parameterType="MatchUserinfo">
+        update match_userinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="matchId != null">match_id = #{matchId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="food != null">food = #{food},</if>
+            <if test="foodAdd != null">food_add = #{foodAdd},</if>
+            <if test="mine != null">mine = #{mine},</if>
+            <if test="mineAdd != null">mine_add = #{mineAdd},</if>
+            <if test="science != null">science = #{science},</if>
+            <if test="scienceAdd != null">science_add = #{scienceAdd},</if>
+            <if test="culture != null">culture = #{culture},</if>
+            <if test="cultureAdd != null">culture_add = #{cultureAdd},</if>
+            <if test="agriculture != null">agriculture = #{agriculture},</if>
+            <if test="minerals != null">minerals = #{minerals},</if>
+            <if test="lab != null">lab = #{lab},</if>
+            <if test="religion != null">religion = #{religion},</if>
+            <if test="print != null">print = #{print},</if>
+            <if test="abattoir != null">abattoir = #{abattoir},</if>
+            <if test="drama != null">drama = #{drama},</if>
+            <if test="blueCard != null">blue_card = #{blueCard},</if>
+            <if test="swordman != null">swordman = #{swordman},</if>
+            <if test="knight != null">knight = #{knight},</if>
+            <if test="artillerist != null">artillerist = #{artillerist},</if>
+            <if test="plane != null">plane = #{plane},</if>
+            <if test="hardCard != null">hard_card = #{hardCard},</if>
+            <if test="wirtePoint != null">wirte_point = #{wirtePoint},</if>
+            <if test="redPoint != null">red_point = #{redPoint},</if>
+            <if test="miracleList != null">miracle_list = #{miracleList},</if>
+            <if test="leader != null">leader = #{leader},</if>
+            <if test="formationId != null">formation_id = #{formationId},</if>
+            <if test="polity != null">polity = #{polity},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMatchUserinfoById" parameterType="Long">
+        delete from match_userinfo where id = #{id}
+    </delete>
+
+    <delete id="deleteMatchUserinfoByIds" parameterType="String">
+        delete from match_userinfo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

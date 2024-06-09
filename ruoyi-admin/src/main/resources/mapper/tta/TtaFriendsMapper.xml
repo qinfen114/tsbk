@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.tta.mapper.TtaFriendsMapper">
+    
+    <resultMap type="TtaFriends" id="TtaFriendsResult">
+        <result property="chatId"    column="chat_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userId2"    column="user_id2"    />
+        <result property="userName2"    column="user_name2"    />
+        <result property="userId3"    column="user_id3"    />
+        <result property="userName3"    column="user_name3"    />
+        <result property="userId4"    column="user_id4"    />
+        <result property="userName4"    column="user_name4"    />
+    </resultMap>
+
+    <sql id="selectTtaFriendsVo">
+        select chat_id, user_id, user_name, user_id2, user_name2, user_id3, user_name3, user_id4, user_name4 from tta_friends
+    </sql>
+
+    <select id="selectTtaFriendsList" parameterType="TtaFriends" resultMap="TtaFriendsResult">
+        <include refid="selectTtaFriendsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userId2 != null "> and user_id2 = #{userId2}</if>
+            <if test="userName2 != null  and userName2 != ''"> and user_name2 like concat('%', #{userName2}, '%')</if>
+            <if test="userId3 != null "> and user_id3 = #{userId3}</if>
+            <if test="userName3 != null  and userName3 != ''"> and user_name3 like concat('%', #{userName3}, '%')</if>
+            <if test="userId4 != null "> and user_id4 = #{userId4}</if>
+            <if test="userName4 != null  and userName4 != ''"> and user_name4 like concat('%', #{userName4}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTtaFriendsByChatId" parameterType="Long" resultMap="TtaFriendsResult">
+        <include refid="selectTtaFriendsVo"/>
+        where chat_id = #{chatId}
+    </select>
+        
+    <insert id="insertTtaFriends" parameterType="TtaFriends">
+        insert into tta_friends
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chatId != null">chat_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="userId2 != null">user_id2,</if>
+            <if test="userName2 != null and userName2 != ''">user_name2,</if>
+            <if test="userId3 != null">user_id3,</if>
+            <if test="userName3 != null">user_name3,</if>
+            <if test="userId4 != null">user_id4,</if>
+            <if test="userName4 != null">user_name4,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chatId != null">#{chatId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="userId2 != null">#{userId2},</if>
+            <if test="userName2 != null and userName2 != ''">#{userName2},</if>
+            <if test="userId3 != null">#{userId3},</if>
+            <if test="userName3 != null">#{userName3},</if>
+            <if test="userId4 != null">#{userId4},</if>
+            <if test="userName4 != null">#{userName4},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTtaFriends" parameterType="TtaFriends">
+        update tta_friends
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="userId2 != null">user_id2 = #{userId2},</if>
+            <if test="userName2 != null and userName2 != ''">user_name2 = #{userName2},</if>
+            <if test="userId3 != null">user_id3 = #{userId3},</if>
+            <if test="userName3 != null">user_name3 = #{userName3},</if>
+            <if test="userId4 != null">user_id4 = #{userId4},</if>
+            <if test="userName4 != null">user_name4 = #{userName4},</if>
+        </trim>
+        where chat_id = #{chatId}
+    </update>
+
+    <delete id="deleteTtaFriendsByChatId" parameterType="Long">
+        delete from tta_friends where chat_id = #{chatId}
+    </delete>
+
+    <delete id="deleteTtaFriendsByChatIds" parameterType="String">
+        delete from tta_friends where chat_id in 
+        <foreach item="chatId" collection="array" open="(" separator="," close=")">
+            #{chatId}
+        </foreach>
+    </delete>
+</mapper>

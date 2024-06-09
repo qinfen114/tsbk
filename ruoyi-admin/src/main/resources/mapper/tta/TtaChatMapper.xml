@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.tta.mapper.TtaChatMapper">
+    
+    <resultMap type="TtaChat" id="TtaChatResult">
+        <result property="id"    column="id"    />
+        <result property="charId"    column="char_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <sql id="selectTtaChatVo">
+        select id, char_id, user_id, user_name, content from tta_chat
+    </sql>
+
+    <select id="selectTtaChatList" parameterType="TtaChat" resultMap="TtaChatResult">
+        <include refid="selectTtaChatVo"/>
+        <where>  
+            <if test="charId != null "> and char_id = #{charId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTtaChatById" parameterType="Long" resultMap="TtaChatResult">
+        <include refid="selectTtaChatVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTtaChat" parameterType="TtaChat">
+        insert into tta_chat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="charId != null">char_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="content != null">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="charId != null">#{charId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="content != null">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTtaChat" parameterType="TtaChat">
+        update tta_chat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="charId != null">char_id = #{charId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="content != null">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTtaChatById" parameterType="Long">
+        delete from tta_chat where id = #{id}
+    </delete>
+
+    <delete id="deleteTtaChatByIds" parameterType="String">
+        delete from tta_chat where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

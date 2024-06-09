@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Stick.mapper.PostcontentMapper">
+    
+    <resultMap type="Postcontent" id="PostcontentResult">
+        <result property="pid"    column="pid"    />
+        <result property="imgurls"    column="imgurls"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="files"    column="files"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="whitelist"    column="whitelist"    />
+        <result property="blacklist"    column="blacklist"    />
+        <result property="authorId"    column="author_id"    />
+        <result property="authorName"    column="author_name"    />
+        <result property="type"    column="type"    />
+        <result property="createtime"    column="createtime"    />
+    </resultMap>
+
+    <sql id="selectPostcontentVo">
+        select pid, imgurls, title, content, files, ctime, whitelist, blacklist, author_id, author_name, type, createtime from postcontent
+    </sql>
+
+    <select id="selectPostcontentList" parameterType="Postcontent" resultMap="PostcontentResult">
+        <include refid="selectPostcontentVo"/>
+        <where>  
+            <if test="pid != null "> and pid = #{pid}</if>
+            <if test="imgurls != null  and imgurls != ''"> and imgurls = #{imgurls}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="files != null  and files != ''"> and files = #{files}</if>
+            <if test="ctime != null  and ctime != ''"> and ctime = #{ctime}</if>
+            <if test="whitelist != null  and whitelist != ''"> and whitelist = #{whitelist}</if>
+            <if test="blacklist != null  and blacklist != ''"> and blacklist = #{blacklist}</if>
+            <if test="authorId != null "> and author_id = #{authorId}</if>
+            <if test="authorName != null  and authorName != ''"> and author_name like concat('%', #{authorName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPostcontentByPid" parameterType="Long" resultMap="PostcontentResult">
+        <include refid="selectPostcontentVo"/>
+        where pid = #{pid}
+    </select>
+        
+    <insert id="insertPostcontent" parameterType="Postcontent" useGeneratedKeys="true" keyProperty="pid">
+        insert into postcontent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="imgurls != null">imgurls,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="files != null">files,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="whitelist != null">whitelist,</if>
+            <if test="blacklist != null">blacklist,</if>
+            <if test="authorId != null">author_id,</if>
+            <if test="authorName != null">author_name,</if>
+            <if test="type != null">type,</if>
+            <if test="createtime != null">createtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="imgurls != null">#{imgurls},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="files != null">#{files},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="whitelist != null">#{whitelist},</if>
+            <if test="blacklist != null">#{blacklist},</if>
+            <if test="authorId != null">#{authorId},</if>
+            <if test="authorName != null">#{authorName},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createtime != null">#{createtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePostcontent" parameterType="Postcontent">
+        update postcontent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imgurls != null">imgurls = #{imgurls},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="files != null">files = #{files},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="whitelist != null">whitelist = #{whitelist},</if>
+            <if test="blacklist != null">blacklist = #{blacklist},</if>
+            <if test="authorId != null">author_id = #{authorId},</if>
+            <if test="authorName != null">author_name = #{authorName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+        </trim>
+        where pid = #{pid}
+    </update>
+
+    <delete id="deletePostcontentByPid" parameterType="Long">
+        delete from postcontent where pid = #{pid}
+    </delete>
+
+    <delete id="deletePostcontentByPids" parameterType="String">
+        delete from postcontent where pid in 
+        <foreach item="pid" collection="array" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.tta.mapper.MatchContentMapper">
+    
+    <resultMap type="MatchContent" id="MatchContentResult">
+        <result property="id"    column="id"    />
+        <result property="aEraBlackCards"    column="A_era_black_cards"    />
+        <result property="aEraCards"    column="A_era_cards"    />
+        <result property="oneEraBlackCards"    column="one_era_black_cards"    />
+        <result property="oneEraCards"    column="one_era_cards"    />
+        <result property="twoEraBlackCards"    column="two_era_black_cards"    />
+        <result property="twoEraCards"    column="two_era_cards"    />
+        <result property="threeEraBlackCards"    column="three_era_black_cards"    />
+        <result property="threeEraCards"    column="three_era_cards"    />
+        <result property="nowEra"    column="now_era"    />
+        <result property="formationList"    column="formation_list"    />
+    </resultMap>
+
+    <sql id="selectMatchContentVo">
+        select id, A_era_black_cards, A_era_cards, one_era_black_cards, one_era_cards, two_era_black_cards, two_era_cards, three_era_black_cards, three_era_cards, now_era, formation_list from match_content
+    </sql>
+
+    <select id="selectMatchContentList" parameterType="MatchContent" resultMap="MatchContentResult">
+        <include refid="selectMatchContentVo"/>
+        <where>  
+            <if test="aEraBlackCards != null  and aEraBlackCards != ''"> and A_era_black_cards = #{aEraBlackCards}</if>
+            <if test="aEraCards != null  and aEraCards != ''"> and A_era_cards = #{aEraCards}</if>
+            <if test="oneEraBlackCards != null  and oneEraBlackCards != ''"> and one_era_black_cards = #{oneEraBlackCards}</if>
+            <if test="oneEraCards != null  and oneEraCards != ''"> and one_era_cards = #{oneEraCards}</if>
+            <if test="twoEraBlackCards != null  and twoEraBlackCards != ''"> and two_era_black_cards = #{twoEraBlackCards}</if>
+            <if test="twoEraCards != null  and twoEraCards != ''"> and two_era_cards = #{twoEraCards}</if>
+            <if test="threeEraBlackCards != null  and threeEraBlackCards != ''"> and three_era_black_cards = #{threeEraBlackCards}</if>
+            <if test="threeEraCards != null  and threeEraCards != ''"> and three_era_cards = #{threeEraCards}</if>
+            <if test="nowEra != null  and nowEra != ''"> and now_era = #{nowEra}</if>
+            <if test="formationList != null  and formationList != ''"> and formation_list = #{formationList}</if>
+        </where>
+    </select>
+    
+    <select id="selectMatchContentById" parameterType="Long" resultMap="MatchContentResult">
+        <include refid="selectMatchContentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMatchContent" parameterType="MatchContent">
+        insert into match_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="aEraBlackCards != null">A_era_black_cards,</if>
+            <if test="aEraCards != null">A_era_cards,</if>
+            <if test="oneEraBlackCards != null">one_era_black_cards,</if>
+            <if test="oneEraCards != null">one_era_cards,</if>
+            <if test="twoEraBlackCards != null">two_era_black_cards,</if>
+            <if test="twoEraCards != null">two_era_cards,</if>
+            <if test="threeEraBlackCards != null">three_era_black_cards,</if>
+            <if test="threeEraCards != null">three_era_cards,</if>
+            <if test="nowEra != null">now_era,</if>
+            <if test="formationList != null">formation_list,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="aEraBlackCards != null">#{aEraBlackCards},</if>
+            <if test="aEraCards != null">#{aEraCards},</if>
+            <if test="oneEraBlackCards != null">#{oneEraBlackCards},</if>
+            <if test="oneEraCards != null">#{oneEraCards},</if>
+            <if test="twoEraBlackCards != null">#{twoEraBlackCards},</if>
+            <if test="twoEraCards != null">#{twoEraCards},</if>
+            <if test="threeEraBlackCards != null">#{threeEraBlackCards},</if>
+            <if test="threeEraCards != null">#{threeEraCards},</if>
+            <if test="nowEra != null">#{nowEra},</if>
+            <if test="formationList != null">#{formationList},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMatchContent" parameterType="MatchContent">
+        update match_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="aEraBlackCards != null">A_era_black_cards = #{aEraBlackCards},</if>
+            <if test="aEraCards != null">A_era_cards = #{aEraCards},</if>
+            <if test="oneEraBlackCards != null">one_era_black_cards = #{oneEraBlackCards},</if>
+            <if test="oneEraCards != null">one_era_cards = #{oneEraCards},</if>
+            <if test="twoEraBlackCards != null">two_era_black_cards = #{twoEraBlackCards},</if>
+            <if test="twoEraCards != null">two_era_cards = #{twoEraCards},</if>
+            <if test="threeEraBlackCards != null">three_era_black_cards = #{threeEraBlackCards},</if>
+            <if test="threeEraCards != null">three_era_cards = #{threeEraCards},</if>
+            <if test="nowEra != null">now_era = #{nowEra},</if>
+            <if test="formationList != null">formation_list = #{formationList},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMatchContentById" parameterType="Long">
+        delete from match_content where id = #{id}
+    </delete>
+
+    <delete id="deleteMatchContentByIds" parameterType="String">
+        delete from match_content where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

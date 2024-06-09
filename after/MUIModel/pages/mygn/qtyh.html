@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+	</head>
+
+	<body>
+		<div id="app">
+			<!-- 标题栏 -->
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">其他用户</h1>
+			</header>
+			<!-- 标题栏结束 -->
+			<!-- 主页面 -->
+			<div class="mui-content">
+				<div style="width: 100%;height: 100%;padding: 10px;">
+					<!-- 搜索框 -->
+					<div style="display: flex;" style="width: 100%; background-color: #FFFFFF;">
+						<input style="width: 100%;border-radius: 10px;border: 10PX;padding-left: 10px;"
+							v-model="search_text" placeholder="请输入用户名" />
+						<span class="mui-icon mui-icon-search" @click="search()"></span>
+					</div>
+					<!-- 搜索框结束 -->
+					<div v-for="(item,index) in test_list"
+						style="background-color: #fff;border-radius: 10px;padding: 10px;margin-top: 10px;display: flex">
+						<img onerror="src='../../images/zwtx.png'" :src="ip+item.avatar"
+							style="width: 100px; height: 100px;border-radius: 100px;">
+						<div style="padding-left: 10px;">
+							<div>账户：{{item.userName}}</div>
+							<div>身份：{{item.admin == true ?'管理员':'普通用户'}}</div>
+							<div>创建时间：{{item.createTime}}</div>
+							<div>登录IP：{{item.loginIp != ''? item.loginIp:'暂无记录'}}</div>
+							<div>手机号：{{item.phonenumber == '' ?  '未绑定手机号' : item.phonenumber.slice(0,5)+'******'}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 主页面结束 -->
+		</div>
+		<script src="../../js/mui.js"></script>
+		<script src="../../js/api.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../examples/best-practices/list-to-detail/vue.min.js" type="text/javascript" charset="utf-8">
+		</script>
+		<script type="text/javascript">
+			mui.init()
+			var vm = new Vue({
+				// 生效组件id绑定
+				el: '#app',
+				// 生效组件id绑定结束
+				// 变量
+				data: {
+					search_text: '',
+					test_list: []
+				},
+				// 变量结束
+				//页面加载时
+				created() {
+					this.chushihua();
+				},
+				//页面加载结束
+				updated() {
+
+				},
+				// 事件
+				methods: {
+					//初始化
+					chushihua() {
+						api('/prod-api/system/user/list').then(res => {
+							console.log(res.rows);
+							this.test_list = res.rows
+						})
+					},
+					//初始化结束
+					search() {
+						api('/prod-api/system/user/list?userName=' + this.search_text).then(res => {
+							if (res.code == 200) {
+								this.test_list = res.rows
+							}
+						})
+					}
+				},
+				// 事件结束
+			})
+		</script>
+	</body>
+
+</html>

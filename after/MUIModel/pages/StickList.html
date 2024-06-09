@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/icons-extra.css" />
+		<style type="text/css">
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">帖子列表</h1>
+			<button type="button" onclick="to('newstick')" class="mui-btn mui-btn-blue"
+				style="right: 10px;position: absolute;">发布帖子</button>
+		</header>
+		<div class="mui-content">
+			<div style="padding: 10px;background-color: #fff;display: flex;">
+				<input id="searchinp" style="margin: 0;" type="text" placeholder="请输入帖子标题">
+				<button onclick="searchbtn()" type="button" class="mui-btn mui-btn-blue"
+					style="margin-left: 10px;">搜索</button>
+			</div>
+			<div style="background-color: #fff;border-bottom: 1px solid #999999;"
+				class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+				<div class="mui-scroll" id="typelist">
+					<a onclick="typec('')" class="mui-control-item mui-active">
+						全部
+					</a>
+
+				</div>
+			</div>
+			<ul style="margin: 0;" id="showlist_div" class="mui-table-view">
+				
+			</ul>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var type_value = ''
+
+			function showlist(res) {
+				showlist_div.innerHTML = ''
+				res.rows.forEach(x => {
+					var showtype = false
+					if (x.whitelist != null) {
+						x.whitelist.forEach(x2 => {
+							if (x2 == user_id) {
+								showtype = true
+							}
+						})
+					}
+					if (x.blacklist != null) {
+						x.blacklist.forEach(x2 => {
+							if (x2 == user_id) {
+								showtype = false
+							}
+						})
+					}
+					if (x.authorId == user_id) {
+						showtype = true
+					}
+					if (!x.title.match(searchinp.value)) {
+						showtype = false
+					}
+					if (showtype) {
+						before('showlist_div', `
+						<li onclick="to('listdata',${x.pid})" class="mui-table-view-cell mui-media">
+							<a href="javascript:;">
+								<img style="border: 1px solid #999;" class="mui-media-object mui-pull-left" src="${ip+JSON.parse(x.imgurls)[0]}"
+									onerror="src='../images/zwtp.png'">
+								<div class="mui-media-body">
+									${x.authorName}
+									<p class="mui-ellipsis">${x.ctime}</p>
+								</div>
+								<div>
+								<h5 class="line_1">
+								${x.content}
+								</h5>
+								</div>
+							</a>
+						</li>
+						`)
+					}
+				})
+				if(showlist_div.innerHTML == ''){
+					showlist_div.innerHTML =`
+					<h5 style="text-align: center;padding: 20px;margin:0;">——暂无相关数据——</h5>`
+				}
+			}
+
+			function typec(value) {
+				type_value = value
+				api('/Stick/postcontent/list?type=' + type_value, 'get', {}).then(res => {
+					showlist(res)
+				})
+			}
+
+			async function main() {
+				api('/system/dict/data/list?dictType=stick_type').then(res => {
+					res.rows.forEach(x => {
+						before('typelist', `<a onclick="typec('${x.dictValue}')" class="mui-control-item">
+					  ${x.dictValue}
+					</a>`)
+						mui('.mui-scroll-wrapper').scroll({});
+					})
+				})
+				typec('')
+			}
+
+			function searchbtn() {
+				api('/Stick/postcontent/list?type=' + type_value, 'get', {}).then(res => {
+					showlist(res)
+				})
+			}
+			main()
+			window.addEventListener('ts', function() {
+				location.reload()
+			})
+			mui('.mui-scroll-wrapper').scroll({});
+		</script>
+	</body>
+
+</html>

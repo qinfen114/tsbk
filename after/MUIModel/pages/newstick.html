@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/icons-extra.css" />
+		<style type="text/css">
+			.img_btn {
+				width: 60px;
+				height: 60px;
+				border: 1px solid #ffffff;
+				border-radius: 100px;
+				position: fixed;
+				right: 10px;
+				bottom: 10px;
+				background-color: #FFFFFF;
+			}
+
+			.photo-img {
+				border: 1px solid #999;
+				border-radius: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">发布帖子</h1>
+		</header>
+		<div class="mui-content" style="background-color: #FFF;">
+			<div class="mui-input-row">
+				<label>帖子标题</label>
+				<input id="title" type="text" class="mui-input-clear" placeholder="请输入标题">
+			</div>
+			<div class="mui-input-row">
+				<label>帖子类型</label>
+				<select name="" id="type_select">
+
+				</select>
+			</div>
+			<div class="mui-input-row">
+				<label>帖子内容</label>
+			</div>
+			<div style="padding: 10px;">
+				<textarea id="content" placeholder="请输入内容" rows="" style="width: 100%;height: 300px;margin: 0;"
+					cols=""></textarea>
+			</div>
+			<div class="mui-input-row">
+				<label>上传文件</label>
+			</div>
+			<div style="padding: 10px;display: flex;">
+				<input style="margin: 0;" onchange="upfile()" type="file" name="" id="file" value="" />
+				<a style="white-space:nowrap;" id="xzurl" href="">下载</a>
+			</div>
+			<div class="mui-input-row">
+				<label>上传图片</label>
+			</div>
+			<div style="position: relative;padding: 10px;">
+				<div id="phpgrid"
+					style="display: grid;grid-template-columns: repeat(3,1fr);grid-row-gap: 10px;justify-items: center;align-items: center;">
+					<div class="photo">
+						<img src="../images/xztp.png" class="photo-img">
+						<input onchange="cgfile()" id="filebtn" type="file" class="photo-btn" />
+					</div>
+				</div>
+			</div>
+			<div style="padding: 10px;">
+				<button type="button" class="mui-btn mui-btn-blue" style="width: 100%;" onclick="fb()">发布帖子</button>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var img_list = []
+			var fileurl = ''
+
+			function nowtime() {
+				var now = new Date();
+				var year = now.getFullYear();
+				var month = ('0' + (now.getMonth() + 1)).slice(-2);
+				var day = ('0' + now.getDate()).slice(-2);
+				var hours = ('0' + now.getHours()).slice(-2);
+				var minutes = ('0' + now.getMinutes()).slice(-2);
+				var seconds = ('0' + now.getSeconds()).slice(-2);
+				var formattedTime = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+				return formattedTime
+			}
+			async function main() {
+				api('/system/dict/data/list?dictType=stick_type').then(res => {
+					res.rows.forEach(x => {
+						before('type_select', `<option value="${x.dictValue}">${x.dictValue}</option>`)
+					})
+				})
+			}
+
+			function upfile() {
+				var php = document.getElementById("file").files[0]
+				photo(php).then(file => {
+					console.log(JSON.parse(file));
+					if (JSON.parse(file).fileName) {
+						fileurl = JSON.parse(file).fileName
+						xzurl.href = ip + fileurl
+						console.log(xzurl.href);
+					}
+				})
+			}
+
+			function fb() {
+				if (img_list == []) {
+					img_list = null
+				}
+				if (fileurl == '') {
+					fileurl = null
+				}
+				if (title.value == '' || content.value == '') {
+					tst('帖子标题/内容不能为空')
+					return
+				}
+				api('/system/user/profile', 'get', {}).then(res2 => {
+					api('/Stick/postcontent', 'post', {
+						title: title.value,
+						content: content.value,
+						files: fileurl,
+						imgurls: img_list ? JSON.stringify(img_list) : null,
+						authorId: user_id,
+						authorName: res2.data.nickName,
+						type: type_select.value,
+						ctime: nowtime()
+					}).then(res => {
+						tst('上传成功')
+						backnew()
+						mui.back()
+					})
+				})
+			}
+
+			function cgfile() {
+				var php = document.getElementById("filebtn").files[0]
+				photo(php).then(imge => {
+					if (JSON.parse(imge).fileName) {
+						img_list.push(JSON.parse(imge).fileName)
+						console.log(JSON.parse(imge));
+						document.getElementById("phpgrid").innerHTML = `
+						<div class="photo">
+							<img src="../images/xztp.png" class="photo-img">
+							<input onchange="cgfile()" id="filebtn" type="file" class="photo-btn" />
+						</div>
+						`
+						img_list.forEach(x => {
+							document.getElementById("phpgrid").insertAdjacentHTML('afterbegin', `
+				<img src="` + ip + x + `" class="photo-img">
+				`)
+						})
+					}
+				})
+			}
+			main()
+			window.addEventListener('ts', function() {
+
+			})
+		</script>
+	</body>
+
+</html>

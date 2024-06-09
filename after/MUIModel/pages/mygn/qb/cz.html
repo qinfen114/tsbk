@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../../css/icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+	</head>
+
+	<body>
+		<div id="app">
+			<!-- 标题栏 -->
+			<header class="mui-bar mui-bar-nav" style="background-color: #00ab44;">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;"></a>
+				<h1 class="mui-title" style="color: #FFFFFF;">充值</h1>
+			</header>
+			<!-- 标题栏结束 -->
+			<!-- 主页面 -->
+			<div class="mui-content">
+				<div style="width: 100%;height: 100%;padding: 10px;">
+					<div style="display: flex;padding: 15px;">
+						<div style="width: 100%;display: flex;">
+							<div>充值方式</div>
+							<div style="padding-left: 20px;">{{czfs}}</div>
+						</div>
+						<span class="mui-icon mui-icon-arrowright"></span>
+					</div>
+					<div style="width: 100%;background-color: #FFFFFF;padding: 15px;border-radius: 10px;">
+						<div style="color: #444444;">充值金额</div>
+						<div style="display: flex;">
+							<div style="width: 10%;font-size: 40px;margin-top: 10px;color: #FFB400;">￥</div>
+							<input v-model="money" type="number"
+								style="width: 90%;border-top: #FFFFFF;border-left: #FFFFFF;border-right: #FFFFFF;border-color: #ffb400; line-height: 40px;font-size: 20px;color: #FFB400;" />
+						</div>
+					</div>
+					<div style="height: 30px;"></div>
+					<div style="width: 100%;text-align: center;">
+						<button type="button" @click="cz()"
+							style="width: 150px;height: 40px;background-color: #00ab44;color: #FFFFFF;">充值</button>
+					</div>
+				</div>
+			</div>
+			<!-- 主页面结束 -->
+		</div>
+		<script src="../../../js/mui.js"></script>
+		<script src="../../../js/api.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../examples/best-practices/list-to-detail/vue.min.js" type="text/javascript" charset="utf-8">
+		</script>
+		<script type="text/javascript">
+			mui.init({
+				beforeback: function() {
+					var list = plus.webview.currentWebview().opener();
+					mui.fire(list, 'event');
+					return true;
+				}
+			})
+			var vm = new Vue({
+				// 生效组件id绑定
+				el: '#app',
+				// 生效组件id绑定结束
+				// 变量
+				data: {
+					czfs: '支付宝',
+					money: ''
+				},
+				// 变量结束
+				//页面加载时
+				created() {
+					this.chushihua();
+				},
+				//页面加载结束
+				updated() {
+
+				},
+				// 事件
+				methods: {
+					//初始化
+					chushihua() {
+
+					},
+					//初始化结束
+					cz() {
+						if (this.money <= 0) {
+							mui.toast('请输入正确数值')
+							return
+						}
+						api('/prod-api/api/common/balance/recharge?money=' + this.money, 'post', {}).then(res => {
+							mui.toast('充值成功');
+							setTimeout(() => {
+								mui.back()
+							}, 1000);
+						})
+					}
+				},
+				// 事件结束
+			})
+		</script>
+	</body>
+
+</html>

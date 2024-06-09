@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../../css/icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/app.css"/>
+		<style type="text/css">
+			.xw {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+			}
+
+			.xwt {
+				width: 100%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<!-- 标题栏 -->
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">全部反馈</h1>
+			</header>
+			<!-- 标题栏结束 -->
+			<!-- 主页面 -->
+			<div class="mui-content">
+				<div style="width: 100%;height: 100%;padding: 10px;">
+					<div class="tscard" style="margin-bottom: 10px;"
+						v-for="(item,index) in fk_list" @click="toxq(item.id)"
+						v-if="item.title != '' && item.title != null && item.content != '' && item.content != null ">
+						<h4 class="line_1">{{item.title}}</h4>
+						<div style="width: 100%;background-color: #000000;height: 1px;"></div>
+						<h5 style="height: 30px;line-height: 15px;width: 100%;" class="line_2">{{item.content}}</h5>
+					</div>
+					<div style="line-height: 250px;color: #999;text-align: center;" v-if="fk_list.length==0">
+						——暂无反馈——
+					</div>
+				</div>
+				<div style="width: 100%; text-align: center;position: fixed;bottom: 5px;">
+					<img src="../../../images/TianJia.png.png" @click="xzfk()"
+						style="border-radius: 100px;width: 50px;height: 50px;background-color: #FFFFFF;">
+				</div>
+			</div>
+			<!-- 主页面结束 -->
+		</div>
+		<script src="../../../js/mui.js"></script>
+		<script src="../../../js/api.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../examples/best-practices/list-to-detail/vue.min.js" type="text/javascript" charset="utf-8">
+		</script>
+		<script type="text/javascript">
+			mui.init()
+			window.addEventListener('page', function(e) {
+				 location.reload();
+			});
+			var vm = new Vue({
+				// 生效组件id绑定
+				el: '#app',
+				// 生效组件id绑定结束
+				// 变量
+				data: {
+					fk_list: []
+				},
+				// 变量结束
+				//页面加载时
+				created() {
+					this.chushihua();
+				},
+				//页面加载结束
+				updated() {},
+				// 事件
+				methods: {
+					//初始化
+					chushihua() {
+						api('/prod-api/api/common/feedback/list').then(res => {
+							this.fk_list = res.rows
+						})
+					},
+					//初始化结束
+					xzfk() {
+						mui.openWindow({
+							url: 'xzfk.html'
+						})
+					},
+					toxq(id) {
+						localStorage.setItem('id', id);
+						mui.openWindow({
+							url: 'fkxq.html'
+						})
+					}
+				},
+				// 事件结束
+			})
+		</script>
+	</body>
+
+</html>

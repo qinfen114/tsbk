@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/icons-extra.css" />
+		<style type="text/css">
+
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content centery"
+			style="height: 100vh;width: 100vw;justify-content: center;background-image: url(../images/back2.png); background-size: cover;background-position: center;">
+			<div style="text-align: center;">
+				<h3 style="margin: 20px;">请登录您的账号</h3>
+
+				<div class="mui-input-row">
+					<label>账号</label>
+					<input id="username" type="text" class="mui-input-clear" placeholder="请输入账号">
+				</div>
+				<div class="mui-input-row">
+					<label>密码</label>
+					<input id="password" type="password" class="mui-input-clear" placeholder="请输入密码">
+				</div>
+				<div class="mui-input-row">
+					<label>验证码</label>
+					<input id="code" type="text" class="mui-input-clear" placeholder="请输入验证码">
+				</div>
+				<div>
+					<img style="border-radius: 0;height: 50px;" onclick="yzmsx()" src="" id="yzmimg">
+				</div>
+				<button onclick="login()" type="button" style="padding: 8px 50px;"
+					class="mui-btn mui-btn-blue">登录</button>
+				<h5 onclick="to('zc')" style="color: #007AFF;">没有账号？立即注册</h5>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			var codeurl = ''
+			// mui.plusReady(function() {
+			// 	plus.screen.lockOrientation("landscape-primary");
+			// })
+			var id = localStorage.getItem('id')
+			mui.init()
+
+			function yzmsx() {
+				api('/captchaImage', 'get', {}).then(res => {
+					codeurl = res.uuid
+					yzmimg.src = 'data:image/jpg;base64,' + res.img
+				})
+			}
+			async function main() {
+				yzmsx()
+			}
+			main()
+
+			function login() {
+				mui.ajax(ip + '/login', {
+					data: {
+						username: username.value,
+						password: password.value,
+						code: code.value,
+						uuid: codeurl
+					},
+					headers: {
+						'Authorization': '',
+						'Content-Type': 'application/json'
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(ip + '/login', data);
+						if (data.code == 200) {
+							tst('登录成功')
+							localStorage.setItem('token', data.token)
+							token = localStorage.getItem('token')
+							api('/system/user/profile', 'get', {}).then(res => {
+								localStorage.setItem('user_id', res.data.userId)
+								to('StickList')
+							})
+						} else {
+							yzmsx()
+							tst(data.msg)
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(xhr, type, errorThrown);
+					}
+				});
+			}
+			window.addEventListener('ts', function() {
+
+			})
+		</script>
+	</body>
+
+</html>

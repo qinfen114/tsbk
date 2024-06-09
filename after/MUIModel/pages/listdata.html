@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/icons-extra.css" />
+		<style type="text/css">
+		  p img {
+		    max-width: 100%;
+		    height: auto;
+		  }
+		  
+		  .mui-content>.mui-table-view:first-child {
+		    margin-top: 0;
+		  }
+		  
+		  body,
+		  .mui-content {
+		    background-color: #FFFFFF;
+		  }
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">详情</h1>
+		</header>
+		<div class="mui-content" style="background-color: #fff;">
+			<div id="data" style="padding: 10px;padding-bottom: 120px;">
+
+			</div>
+		</div>
+
+		<div
+			style="bottom: 0;width: 100%;position: fixed;background-color: #FFFFFF;padding: 10px;border-top: 2px solid #0062CC;">
+			<div style="display: flex;">
+				<input id="pl_inp" placeholder="请输入评论内容" type="text" style="margin: 0;" name="" id="" value="" />
+				<button onclick="fbpl()" type="button" class="mui-btn mui-btn-blue"
+					style="margin-left: 10px;">发表</button>
+			</div>
+			<div style="display: grid;grid-template-columns: 1fr 1fr;gap: 10px;margin-top: 10px;">
+				<div style="position: relative;display: inline-block;">
+					<input type="file" name="" id="file" onchange="upfile()"
+						style="width: 100%;height: 100%;opacity: 0;position: absolute;z-index: 1000;" id="" value="" />
+					<button id="file_btn" type="button" style="display: inline-block;width: 100%;"
+						class="mui-btn mui-btn-yellow">上传文件</button>
+				</div>
+				<div style="position: relative;display: inline-block;">
+					<input type="file" name="" id="img" onchange="upimg()"
+						style="width: 100%;height: 100%;opacity: 0;position: absolute;z-index: 1000;" id="" value="" />
+					<button id="img_btn" type="button" style="display: inline-block;width: 100%;"
+						class="mui-btn mui-btn-red">上传图片</button>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var fileurl = ''
+			var imgurl = ''
+
+			function upfile() {
+				var php = document.getElementById("file").files[0]
+				photo(php).then(file => {
+					console.log(JSON.parse(file));
+					if (JSON.parse(file).fileName) {
+						fileurl = JSON.parse(file).fileName
+						file_btn.innerHTML = '更换文件'
+						console.log(fileurl);
+					}
+				})
+			}
+
+			function upimg() {
+				var php = document.getElementById("img").files[0]
+				photo(php).then(file => {
+					console.log(JSON.parse(file));
+					if (JSON.parse(file).fileName) {
+						imgurl = JSON.parse(file).fileName
+						img_btn.innerHTML = '更换图片'
+						console.log(imgurl);
+					}
+				})
+			}
+
+			function fbpl() {
+				api('/system/user/profile', 'get', {}).then(res => {
+					api('/Stick/chatlist', 'post', {
+						uid: user_id,
+						uname: res.data.nickName,
+						avatar: res.data.avatar,
+						content: pl_inp.value,
+						files: fileurl,
+						imgurls: imgurl,
+						pid: id
+					}).then(res2 => {
+						tst('评论成功')
+						location.reload()
+					})
+				})
+			}
+			async function main() {
+				data.innerHTML = ''
+				api('/Stick/postcontent/list', 'get', {
+					pid: id
+				}).then(res => {
+					var x = res.rows[0]
+					var imgs = ''
+					JSON.parse(x.imgurls).forEach(x2 => {
+						imgs += `<div class="mui-content-padded">
+								<p>
+								<img src="${ip+x2}"/>
+								</p>
+							</div>`
+					})
+					before('data', `
+					<h4 style="font-size: 20px;">${x.title}</h4>
+					<div style="font-size: 15px;">作者：${x.authorName}</div>
+					<hr>
+					<h5 style="color: #000000;margin: 0;">${x.content}</h5>
+					<div style="display: ${x.files?'block':'none'};">
+						<hr>
+						附带文件：
+						<div id="" style="position: relative;margin-top: 5px;">
+							<span class="mui-icon-extra mui-icon-extra-topic"></span>
+							<a href="${ip+x.files}" class="abright">下载</a>
+						</div>
+					</div>
+					<div style="display: ${x.imgurls?'block':'none'};">
+						<hr>
+						<div class="mui-content-padded">
+							${imgs}
+						</div>
+					</div>
+					<hr>
+					`)
+					api('/Stick/chatlist/list?pid=' + id, 'get', {}).then(res => {
+						before('data', `
+						评论[共${res.rows.length}条]
+						`)
+						res.rows.forEach(x2 => {
+							before('data', `
+							<hr>
+							<div>
+								<div style="display: flex;align-items: center;">
+								<div class="mui-content-padded">
+									<p>
+									<img style="border: 1px solid #999;width: 40px;height: 40px;border-radius: 100px;"
+										src="${ip+x2.avatar}" onerror="src='../images/zwtp.png'">
+										</p>
+								</div>
+									<div>${x2.uname}</div>
+								</div>
+								<h5>${x2.content}</h5>
+								${x2.imgurls?`
+								<div class="mui-content-padded">
+									<p>
+										<img src="${ip+x2.imgurls}" >
+									</p>
+								</div>
+								`:''}
+								<div style="display: ${x2.files?'block':'none'};" >
+									附带文件：<a onclick="load(this)" href="${ip+x2.files}">下载</a>
+								</div>
+							</div>
+							`)
+						})
+					})
+					// mui.previewImage();
+					mui.plusReady(function() {
+					  var loopFlag = false; //默认不支持轮播
+					  // var loopSwitch = document.getElementById('loop_switch');
+					  // loopSwitch.addEventListener('toggle', function(event) {
+					  //   if(event.detail.isActive) {
+					  //     loopFlag = true;
+					  //   } else {
+					  //     loopFlag = false;
+					  //   }
+					  // });
+					  var images = [].slice.call(document.querySelectorAll('.mui-content-padded img'));
+					  var urls = [];
+					  images.forEach(function(item) {
+					    urls.push(item.src);
+					  });
+					  mui('.mui-content-padded').on('tap', 'img', function() {
+					    var index = images.indexOf(this);
+					    plus.nativeUI.previewImage(urls, {
+					      current: index,
+					      loop: loopFlag,
+					      indicator: 'number'
+					    });
+					  });
+					});
+				})
+			}
+			main()
+			window.addEventListener('ts', function() {
+
+			})
+		</script>
+	</body>
+</html>

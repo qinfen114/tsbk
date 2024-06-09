@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="font_ico/iconfont.css" rel="stylesheet"/>
+    <link href="css/header.css" rel="stylesheet"/>
+	<style type="text/css">
+	* {
+	touch-action: none;
+	}
+	</style>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	// 移动设备就绪完成后
+      	mui.plusReady(function(){
+      		plus.navigator.setStatusBarStyle("light");
+      		plus.navigator.setStatusBarBackground("#303030");
+      	});
+    </script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav title">
+	    <h1 class="mui-title title-color"><b id="header_title">首页</b></h1>
+	</header>
+	
+	<nav class="mui-bar mui-bar-tab">
+	    <a class="mui-tab-item mui-active" tabindex="0">
+	        <span class="mui-icon mui-icon-chatbubble"></span>
+	        <span class="mui-tab-label">首页</span>
+	    </a>
+	    <a class="mui-tab-item" tabindex="1">
+	        <span class="mui-icon mui-icon-phone"></span>
+	        <span class="mui-tab-label">测试</span>
+	    </a>
+	    <a class="mui-tab-item" tabindex="2">
+	        <span class="mui-icon mui-icon-paperplane"></span>
+	        <span class="mui-tab-label">测试</span>
+	    </a>
+	 	</nav>
+	<script type="text/javascript">
+		var chatArray = [
+			{
+				pageId: "indexdemo.html",
+				pageUrl: "indexdemo.html",
+				pageTitle: "首页"
+			},
+			{
+				pageId: "index-menu.html",
+				pageUrl: "index-menu.html",
+				pageTitle: "测试"
+			},
+						{
+				pageId: "me_setting.html",
+				pageUrl: "me_setting.html",
+				pageTitle: "测试"
+			}
+		];
+		var pageStyle = {
+			top: "44px",
+			bottom: "50px"
+		}
+	
+		mui.plusReady(function(){
+			// 重写mui back方法 使安卓手机的返回按钮对本页无效
+			mui.back = function(){
+				return false;
+			}
+			// 获取当前的webview对象
+			var indexWebView = plus.webview.currentWebview();
+			// 向当前的主页 追加四张html webview
+			for (var i=0;i<chatArray.length;i++) {
+				var pageView= plus.webview.create(chatArray[i].pageUrl, chatArray[i].pageId, pageStyle);
+				pageView.hide();
+				// 追加子页面到当前主页面
+				indexWebView.append(pageView);
+			}
+			plus.webview.show(chatArray[0].pageId);
+			var header_title = document.getElementById("header_title");
+			// 批量绑定tap 展示不同的webview
+			mui(".mui-bar-tab").on('tap','a',function(){
+				var tabindex = this.getAttribute("tabindex");
+				plus.webview.show(chatArray[tabindex].pageId,"fade-in");
+				header_title.innerHTML = chatArray[tabindex].pageTitle;
+//				for (var i=0;i<chatArray.length;i++) {
+//					if(tabindex!=i){
+//						plus.webview.hide(chatArray[i].pageId,"fade-out");
+//					}
+//				}
+			})
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../../css/icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+	</head>
+
+	<body>
+		<div id="app">
+			<!-- 标题栏 -->
+			<header class="mui-bar mui-bar-nav" style="background-color: #00ab44;">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #FFFFFF;"></a>
+				<h1 class="mui-title" style="color: #FFFFFF;">钱包</h1>
+			</header>
+			<!-- 标题栏结束 -->
+			<!-- 主页面 -->
+			<div class="mui-content">
+				<div style="width: 100%;height: 100%;padding: 10px;">
+					<div
+						style="width: 100%;background-color: #00ab44;display: grid; grid-template-columns: 1fr 1fr; height: 180px;border-radius: 10px;">
+						<div style="display: flex;align-items: center;justify-content: center;height:180px;">
+							<div style="width: 70px;text-align: center;" @click="to('cz')">
+								<img src="../../../images/chongzhi.png" width="70px">
+								<div style="color: #FFFFFF;">充值</div>
+							</div>
+						</div>
+						<div style="display: flex;align-items: center;justify-content: center;height:180px;">
+							<div style="width: 70px;text-align: center;">
+								<img src="../../../images/qianbao.png" width="70px">
+								<div style="color: #FFFFFF;">钱包</div>
+							</div>
+							<h5 style="position: absolute;padding-top: 110px;color: #EEEEEE;">￥{{balance}}</h5>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 5px;height: 22px;margin-top: 3px; background-color: #00ab44;"></div>
+						<h4 style="padding-left: 5px;">交易记录</h4>
+					</div>
+					<div style="border-radius: 10px; padding: 10px; width: 100%;background-color: #FFFFFF;margin-bottom: 10px;"
+						v-for="(item,index) in jyjl_list">
+						<h4>{{item.event}}</h4>
+						<h4 v-if="item.event==null">充值</h4>
+						<div style="width: 100%;text-align: center;background-color: #000000;height: 1px;"></div>
+						<div style="width: 100%;text-align: center;color: #8f8f94;margin-top: 30px;">{{item.changeType}}
+						</div>
+						<h3 style="width: 100%;text-align: center; line-height: 50px;margin-bottom: 20px;">
+							￥{{item.changeAmount}}</h3>
+						<div style="width: 100%;text-align: center;background-color: #000000;height: 1px;"></div>
+						<h5 style="width: 100%;" v-if="item.changeType=='支出'">支付方式：钱包</h5>
+						<h5 style="width: 100%;text-align: end;">{{item.changeTime}}</h5>
+					</div>
+				</div>
+			</div>
+			<!-- 主页面结束 -->
+		</div>
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/api.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../examples/best-practices/list-to-detail/vue.min.js" type="text/javascript" charset="utf-8">
+		</script>
+		<script type="text/javascript">
+			mui.init()
+			window.addEventListener('event', function(e) {
+				location.reload()
+			});
+			var vm = new Vue({
+				// 生效组件id绑定
+				el: '#app',
+				// 生效组件id绑定结束
+				// 变量
+				data: {
+					balance: '',
+					jyjl_list: []
+				},
+				// 变量结束
+				//页面加载时
+				created() {
+					this.chushihua();
+				},
+				//页面加载结束
+				updated() {
+
+				},
+				// 事件
+				methods: {
+					//初始化
+					chushihua() {
+						api('/prod-api/api/common/user/getInfo').then(res => {
+							this.balance = res.user.balance
+						})
+						api('/prod-api/api/common/balance/list').then(res => {
+							this.jyjl_list = res.rows
+						})
+					},
+					//初始化结束
+				},
+				// 事件结束
+			})
+		</script>
+	</body>
+
+</html>

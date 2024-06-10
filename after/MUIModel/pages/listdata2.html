@@ -63,22 +63,53 @@
 			mui.init()
 			var fileurl = ''
 			var imgurl = ''
+			var file = ''
 
-			function createDownload(furl) {
-				var dtask = plus.downloader.createDownload(furl, {
-					// filename: '/'
-				}, function(d, status) {
-					// 下载完成
-					console.log(JSON.stringify(d));
-					// console.log(status);
-					if (status == 200) {
-						tst('下载完成')
-					} else {
-						tst('下载失败：' + status)
+			function load(furl) {
+				mui.ajax(furl, {
+					data: {},
+					contentType: false,
+					processData: false,
+					headers: {
+						"Authorization": token
+					},
+					responseType: "blob",
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(data);
+						let fileReader = new FileReader();
+						fileReader.onload = () => {
+							try {
+								let {
+									code,
+									msg
+								} = JSON.parse(fileReader.result);
+								if (code !== 200) this.msgError(msg || "下载失败");
+							} catch (err) {
+								//console.error(err);
+								const content = data;
+								const blob = new Blob([content]);
+								if ("download" in document.createElement("a")) {
+									const elink = document.createElement("a");
+									elink.download = filename;
+									elink.style.display = "none";
+									elink.href = URL.createObjectURL(blob);
+									document.body.appendChild(elink);
+									elink.click();
+									URL.revokeObjectURL(elink.href);
+									document.body.removeChild(elink);
+								} else {
+									navigator.msSaveBlob(blob, filename);
+								}
+							}
+						};
+						fileReader.readAsText(data);
+					},
+					error: function(xhr, type, errorThrown) {
+
 					}
 				});
-				//dtask.addEventListener("statechanged", onStateChanged, false);
-				dtask.start();
 			}
 
 			function upfile() {
@@ -142,7 +173,11 @@
 					<h5 style="color: #000000;margin: 0;">${x.content}</h5>
 					<div style="display: ${x.files?'block':'none'};">
 						<hr>
-						附带文件：<span style="color:#00aaff" onclick="createDownload('${ip+x.files}')">下载</span>
+						附带文件：
+						<div id="" style="position: relative;margin-top: 5px;">
+							<span class="mui-icon-extra mui-icon-extra-topic"></span>
+							<span onclick="load('${ip+x.files}')" class="abright">下载</span>
+						</div>
 					</div>
 					<div style="display: ${x.imgurls?'block':'none'};">
 						<hr>
@@ -150,18 +185,12 @@
 							${imgs}
 						</div>
 					</div>
+					<hr>
 					`)
 					api('/Stick/chatlist/list?pid=' + id, 'get', {}).then(res => {
 						before('data', `
 						评论[共${res.rows.length}条]
 						`)
-						if (res.rows.length == 0) {
-							before('data', `
-							<h5 style="text-align: center;padding: 30px;">
-								暂无评论
-							</h5>
-							`)
-						}
 						res.rows.forEach(x2 => {
 							before('data', `
 							<hr>
@@ -184,7 +213,7 @@
 								</div>
 								`:''}
 								<div style="display: ${x2.files?'block':'none'};" >
-									附带文件：<span style="color:#00aaff" onclick="createDownload('${ip+x2.files}')">下载</span>
+									附带文件：<a onclick="load('${ip+x2.files}')">下载</a>
 								</div>
 							</div>
 							`)
@@ -193,14 +222,6 @@
 					// mui.previewImage();
 					mui.plusReady(function() {
 						var loopFlag = false; //默认不支持轮播
-						// var loopSwitch = document.getElementById('loop_switch');
-						// loopSwitch.addEventListener('toggle', function(event) {
-						//   if(event.detail.isActive) {
-						//     loopFlag = true;
-						//   } else {
-						//     loopFlag = false;
-						//   }
-						// });
 						var images = [].slice.call(document.querySelectorAll('.mui-content-padded img'));
 						var urls = [];
 						images.forEach(function(item) {
@@ -221,6 +242,7 @@
 			window.addEventListener('ts', function() {
 
 			})
+
 		</script>
 	</body>
 </html>

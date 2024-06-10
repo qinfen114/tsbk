@@ -6,9 +6,9 @@
 		<title></title>
 		<meta name="viewport"
 			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../../../css/mui.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="../../../css/icons-extra.css" />
-		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+		<link href="../../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/icons-extra.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
 	</head>
 
 	<body>
@@ -16,24 +16,23 @@
 			<!-- 标题栏 -->
 			<header class="mui-bar mui-bar-nav">
 				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-				<h1 class="mui-title">反馈详情</h1>
+				<h1 class="mui-title">关于我们</h1>
 			</header>
 			<!-- 标题栏结束 -->
 			<!-- 主页面 -->
 			<div class="mui-content">
 				<div style="width: 100%;height: 100%;padding: 10px;">
-					<div style="background-color: #FFFFFF;width: 100%;border-radius: 10px;padding: 10px;">
-						<h4  style="text-align: center;width: 100%;word-wrap: break-word;">{{fkxq.title}}</h4>
-						<h5 style="width: 100%;text-align: end;">{{fkxq.createTime}}</h5>
-						<h5 style="min-height: 50vh;">{{fkxq.content}}</h5>
-					</div>
+					<div style="width: 100%;text-align: center;font-size: 150px;line-height: 140px;margin-top: 110px;">404</div>
+					<div style="width: 100%;text-align: center;font-size: 40px;line-height: 40px;margin-top: 20px;">Page Not Found</div>
+					<h6 style="margin-top: 300px;">因为我还没想好</h6>
 				</div>
 			</div>
 			<!-- 主页面结束 -->
+			
 		</div>
-		<script src="../../../js/mui.js"></script>
-		<script src="../../../js/api.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../examples/best-practices/list-to-detail/vue.min.js" type="text/javascript" charset="utf-8">
+		<script src="../../js/mui.js"></script>
+		<script src="../../js/api.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../examples/best-practices/list-to-detail/vue.min.js" type="text/javascript" charset="utf-8">
 		</script>
 		<script type="text/javascript">
 			mui.init()
@@ -43,25 +42,23 @@
 				// 生效组件id绑定结束
 				// 变量
 				data: {
-					fkxq:[]
+
 				},
 				// 变量结束
 				//页面加载时
 				created() {
+					document.activeElement.blur(); 
 					this.chushihua();
 				},
 				//页面加载结束
 				updated() {
-
+					
 				},
 				// 事件
 				methods: {
 					//初始化
-					chushihua() {
-						api('/prod-api/api/common/feedback/' + localStorage.getItem('id')).then(res => {
-							console.log(res);
-							this.fkxq = res.data
-						})
+					chushihua(){
+						
 					},
 					//初始化结束
 				},

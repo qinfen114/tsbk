@@ -65,12 +65,8 @@
 			var imgurl = ''
 
 			function createDownload(furl) {
-				var dtask = plus.downloader.createDownload(furl, {
-					// filename: '/'
-				}, function(d, status) {
+				var dtask = plus.downloader.createDownload(furl, {}, function(d, status) {
 					// 下载完成
-					console.log(JSON.stringify(d));
-					// console.log(status);
 					if (status == 200) {
 						tst('下载完成')
 					} else {
@@ -157,7 +153,7 @@
 						`)
 						if (res.rows.length == 0) {
 							before('data', `
-							<h5 style="text-align: center;padding: 30px;">
+							<h5 style="">
 								暂无评论
 							</h5>
 							`)

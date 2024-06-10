@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/icons-extra.css" />
+		<style scoped>
+			.user-header {
+				position: relative;
+				display: inline-block;
+			}
+
+			.user-header-com {
+				width: 100px;
+				height: 100px;
+				display: inline-block;
+				border-radius: 10px;
+			}
+
+			.header-upload-btn {
+				position: absolute;
+				left: 0;
+				top: 0;
+				opacity: 0;
+				/* 通过定位把input放在img标签上面，通过不透明度隐藏 */
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<!-- 标题栏 -->
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">个人中心</h1>
+		</header>
+		<!-- 标题栏结束 -->
+		<!-- 底部导航栏 -->
+		<!-- <nav
+			style=" z-index: 10000;overflow: hidden; position: fixed; bottom: 0;width: 100%; background-color: #ffffff;width: 100%;height: 50px;display: flex;">
+			<div style="width: 100%;padding: 10px;text-align: center;padding-top: 0px;" onclick="sytz('page1.html')">
+				<span class="mui-icon mui-icon-home"></span>
+				<h5>首页</h5>
+			</div>
+			<div style="width: 100%;padding: 10px;text-align: center;padding-top: 0px;" onclick="sytz('page2.html')">
+				<span class="mui-icon mui-icon-bars"></span>
+				<h5>新闻</h5>
+			</div>
+			<div style="width: 100%;padding: 10px;text-align: center;padding-top: 0px;" onclick="sytz('page3.html')">
+				<span class="mui-icon-extra mui-icon-extra-class"></span>
+				<h5>全部服务</h5>
+			</div>
+			<div style="width: 100%;padding: 10px;text-align: center;padding-top: 0px;">
+				<span class="mui-icon mui-icon-person" style="color: #007AFF;"></span>
+				<h5 style="color: #007AFF;">个人中心</h5>
+			</div>
+		</nav> -->
+		<!-- 底部导航栏结束 -->
+		<!-- 主页面 -->
+		<div class="mui-content" id="app">
+			<div style="width: 100%;padding: 10px;">
+				<div style="background-color: #fff;border-radius: 10px;width: 100%;padding: 10px;">
+					<div style="display: grid;grid-template-columns: 1fr 3fr;">
+						<img id="avatar" src='' class="user-header-img user-header-com">
+						<div>
+							<div id="nickName" style="padding-left: 10px;margin: 3px; font-size: 15px;">1231</div>
+							<div id="sex" style="padding-left: 10px;margin: 3px;font-size: 15px;"></div>
+							<div id="phonenumber" style="padding-left: 10px;margin: 3px;font-size: 15px;"></div>
+							<div id="email" style="padding-left: 10px;margin: 3px;font-size: 15px;"></div>
+						</div>
+					</div>
+				</div>
+				<div style="background-color: #fff;border-radius: 10px;width: 100%;padding: 10px;margin-top: 10px;">
+					<div onclick="to('./mygn/grxx')">
+						<span class="mui-icon mui-icon-person"></span>
+						个人信息
+						<span style="position: absolute;right: 20px;" class="mui-icon mui-icon-arrowright"></span>
+					</div>
+					<div onclick="to('./mygn/gywm')" style="margin-top: 20px;">
+						<span class="mui-icon-extra mui-icon-extra-peoples"></span>
+						关于我们
+						<span style="position: absolute;right: 20px;" class="mui-icon mui-icon-arrowright"></span>
+					</div>
+					<div onclick="to('./mygn/yszc')" style="margin-top: 20px;">
+						<span class="mui-icon-extra mui-icon-extra-order"></span>
+						用户隐私协议
+						<span style="position: absolute;right: 20px;" class="mui-icon mui-icon-arrowright"></span>
+					</div>
+					<div onclick="to('./mygn/setting/index')" style="margin-top: 20px;">
+						<span class="mui-icon mui-icon-gear"></span>
+						设置
+						<span style="position: absolute;right: 20px;" class="mui-icon mui-icon-arrowright"></span>
+					</div>
+				</div>
+			</div>
+			<div style="height: 50px;"></div>
+		</div>
+		<!-- 主页面结束 -->
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript" charset="UTF-8">
+			mui.init();
+			window.addEventListener('refresh', function(e) {
+				location.reload();
+			});
+			window.onload = function() {
+				this.chushihua()
+			}
+
+			function chushihua() {
+				api('/getInfo','get',{}).then(res => {
+					console.log(res);
+					// this.avatar = res.user.avatar;
+					document.getElementById("avatar").src = ip + res.user.avatar
+					document.getElementById("nickName").innerText = '昵称：' + res.user.nickName;
+					document.getElementById("email").innerText = '邮箱：' + res.user.email;
+					document.getElementById("phonenumber").innerText = '手机号：' + res.user.phonenumber.slice(0, res.user
+						.phonenumber.length - 6) + '******';
+					document.getElementById("sex").innerText = "性别：" + (res.user.sex == 0 ? '男' : '女');
+				})
+			}
+			// 导航栏跳转
+			function sytz(url) {
+				mui.openWindow({
+					url: url,
+					show: {
+						autoShow: true,
+						aniShow: 'none'
+					}
+				});
+			};
+			// 导航栏跳转结束
+		</script>
+	</body>
+
+</html>
